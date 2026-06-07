@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kubanza — O Mercado Digital de Angola</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --laranja: #F56E0F;
+      --laranja-escuro: #C4550A;
+      --preto: #0A0A0A;
+      --preto-medio: #141414;
+      --preto-card: #1A1A1A;
+      --branco: #FAFAFA;
+      --cinza: #888;
+      --borda: rgba(245,110,15,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--preto);
+      color: var(--branco);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--borda);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--laranja);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-btn {
+      background: var(--laranja);
+      color: var(--preto);
+      border: none;
+      padding: 0.55rem 1.3rem;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: var(--laranja-escuro); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(245,110,15,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(245,110,15,0.1);
+      border: 1px solid var(--borda);
+      color: var(--laranja);
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      width: fit-content;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--laranja);
+      border-radius: 50%;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 8vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    h1 span { color: var(--laranja); }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--cinza);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--laranja);
+      color: var(--preto);
+      border: none;
+      padding: 0.9rem 2rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--laranja-escuro); transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--branco);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 0.9rem 2rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--laranja); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--borda);
+      animation: fadeUp 0.6s 0.4s ease both;
+      flex-wrap: wrap;
+    }
+
+    .stat-item { display: flex; flex-direction: column; gap: 0.2rem; }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--laranja);
+    }
+    .stat-label { font-size: 0.8rem; color: var(--cinza); }
+
+    /* COMO FUNCIONA */
+    section { padding: 5rem 2rem; }
+
+    .section-tag {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--laranja);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .section-desc {
+      color: var(--cinza);
+      max-width: 480px;
+      margin-bottom: 3rem;
+      font-size: 1rem;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      background: var(--preto-card);
+      padding: 0.4rem;
+      border-radius: 10px;
+      width: fit-content;
+      border: 1px solid var(--borda);
+    }
+
+    .tab {
+      padding: 0.6rem 1.4rem;
+      border-radius: 7px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--cinza);
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .tab.active { background: var(--laranja); color: var(--preto); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .steps { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+      background: var(--preto-card);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      padding: 1.4rem;
+      transition: border-color 0.2s;
+    }
+    .step:hover { border-color: var(--laranja); }
+
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--laranja);
+      min-width: 2rem;
+      line-height: 1;
+      padding-top: 0.1rem;
+    }
+
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .step-desc { color: var(--cinza); font-size: 0.9rem; }
+
+    /* VANTAGENS */
+    .vantagens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .vantagem-card {
+      background: var(--preto-card);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 1.8rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .vantagem-card:hover { border-color: var(--laranja); transform: translateY(-4px); }
+
+    .vantagem-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .vantagem-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .vantagem-desc { color: var(--cinza); font-size: 0.88rem; line-height: 1.5; }
+
+    /* ZONA DE ENTREGA */
+    .zona-section { background: var(--preto-medio); }
+
+    .bairros-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 2rem;
+    }
+
+    .bairro-tag {
+      background: rgba(245,110,15,0.08);
+      border: 1px solid var(--borda);
+      color: var(--branco);
+      padding: 0.5rem 1rem;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .bairro-tag:hover { background: rgba(245,110,15,0.2); }
+
+    /* FORMULÁRIO */
+    .form-section { background: var(--preto-medio); }
+
+    .form-wrapper {
+      max-width: 540px;
+      background: var(--preto-card);
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+    }
+
+    .form-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-subtitle { color: var(--cinza); font-size: 0.9rem; margin-bottom: 2rem; }
+
+    .form-group { margin-bottom: 1.2rem; }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--cinza);
+      margin-bottom: 0.5rem;
+    }
+
+    input, select {
+      width: 100%;
+      background: var(--preto);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--branco);
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+    input:focus, select:focus { border-color: var(--laranja); }
+    input::placeholder { color: #555; }
+
+    select option { background: var(--preto-card); }
+
+    .form-submit {
+      width: 100%;
+      background: var(--laranja);
+      color: var(--preto);
+      border: none;
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+    .form-submit:hover { background: var(--laranja-escuro); }
+
+    .form-nota {
+      font-size: 0.78rem;
+      color: #555;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    /* SUCCESS */
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+    .success-msg .check {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .success-msg h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    .success-msg p { color: var(--cinza); font-size: 0.9rem; }
+
+    /* FOOTER */
+    footer {
+      padding: 2.5rem 2rem;
+      border-top: 1px solid var(--borda);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--laranja);
+    }
+
+    .footer-desc { color: #444; font-size: 0.82rem; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* DIVIDER */
+    .divider {
+      height: 1px;
+      background: var(--borda);
+      margin: 0 2rem;
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.2rem; }
+      .hero { padding: 7rem 1.2rem 3rem; }
+      section { padding: 4rem 1.2rem; }
+      .hero-stats { gap: 1.5rem; }
+      .tabs { width: 100%; }
+      .tab { flex: 1; text-align: center; }
+      .form-wrapper { padding: 1.8rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">Kubanza</div>
+    <a href="#interesse" class="nav-btn">Quero entrar</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">Menongue, Cuando Cubango</div>
+    <h1>Vende mais.<br />Ganha <span>comissão.</span><br />Com estrutura.</h1>
+    <p class="hero-desc">
+      A Kubanza é a primeira plataforma de afiliados e produtores de Menongue. Produtores vendem, afiliados promovem, e a entrega chega até à tua porta.
+    </p>
+    <div class="hero-actions">
+      <a href="#interesse" class="btn-primary">Quero ser afiliado</a>
+      <a href="#como-funciona" class="btn-secondary">Como funciona</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">16</span>
+        <span class="stat-label">Bairros com entrega</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">2</span>
+        <span class="stat-label">Tipos de produto</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Angolano</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- COMO FUNCIONA -->
+  <section id="como-funciona">
+    <div class="section-tag">Como funciona</div>
+    <h2>Simples para<br />quem vende e<br />quem promove.</h2>
+    <p class="section-desc">Dois caminhos, uma plataforma. Escolhe o teu papel.</p>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('afiliado')">Sou Afiliado</button>
+      <button class="tab" onclick="switchTab('produtor')">Sou Produtor</button>
+    </div>
+
+    <div id="tab-afiliado" class="tab-content active">
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">01</span>
+          <div>
+            <div class="step-title">Regista-te e aguarda aprovação</div>
+            <div class="step-desc">Preenches o formulário e a nossa equipa analisa o teu perfil. Só entram afiliados sérios.</div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">02</span>
+          <div>
+            <div class="step-title">Escolhe os produtos para promover</div>
+            <div class="step-desc">Acedes ao catálogo de produtos dos produtores e escolhes o que queres vender.</div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">03</span>
+          <div>
+            <div class="step-title">Promove e confirma as vendas</div>
+            <div class="step-desc">Partilhas o teu link único. Quando um cliente compra, tu confirmas a venda. Atenção: cancelamentos após confirmação têm penalização de 500 Kzs.</div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">04</span>
+          <div>
+            <div class="step-title">Recebe a tua comissão</div>
+            <div class="step-desc">A plataforma regista cada venda. A tua comissão é calculada automaticamente e paga de forma acordada.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-produtor" class="tab-content">
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">01</span>
+          <div>
+            <div class="step-title">Lista o teu produto na plataforma</div>
+            <div class="step-desc">Produtos digitais ou físicos. Tu defines o preço, a descrição e a percentagem de comissão para os afiliados.</div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">02</span>
+          <div>
+            <div class="step-title">Os afiliados promovem por ti</div>
+            <div class="step-desc">Uma rede de afiliados aprovados leva o teu produto a mais pessoas em Menongue sem precisares de fazer tudo sozinho.</div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">03</span>
+          <div>
+            <div class="step-title">Entrega garantida pela Kubanza</div>
+            <div class="step-desc">Para produtos físicos, a nossa rede de motoboys parceiros faz a entrega nos 16 bairros cobertos. O cliente paga na entrega.</div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">04</span>
+          <div>
+            <div class="step-title">Recebe o valor da venda</div>
+            <div class="step-desc">Após a entrega confirmada, recebes o valor da venda descontando a comissão da plataforma e do afiliado.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- VANTAGENS -->
+  <section>
+    <div class="section-tag reveal">Porquê a Kubanza</div>
+    <h2 class="reveal">Feito para a<br />realidade angolana.</h2>
+    <p class="section-desc reveal">Sem complicações de cartão internacional. Sem promessas vazias. Só estrutura que funciona.</p>
+
+    <div class="vantagens-grid">
+      <div class="vantagem-card reveal">
+        <div class="vantagem-icon">📦</div>
+        <div class="vantagem-title">Produtos físicos e digitais</div>
+        <div class="vantagem-desc">Vende qualquer coisa. Da roupa ao e-book, a plataforma suporta os dois tipos com fluxos diferentes para cada um.</div>
+      </div>
+      <div class="vantagem-card reveal">
+        <div class="vantagem-icon">🏍️</div>
+        <div class="vantagem-title">Entrega com motoboy</div>
+        <div class="vantagem-desc">Rede de motoboys parceiros para entrega em 16 bairros de Menongue. O cliente paga no momento em que recebe.</div>
+      </div>
+      <div class="vantagem-card reveal">
+        <div class="vantagem-icon">💳</div>
+        <div class="vantagem-title">Pagamento angolano</div>
+        <div class="vantagem-desc">Multicaixa Express e transferência bancária. Sem cartão internacional, sem complicações. Simples como deve ser.</div>
+      </div>
+      <div class="vantagem-card reveal">
+        <div class="vantagem-icon">🔗</div>
+        <div class="vantagem-title">Link único de rastreamento</div>
+        <div class="vantagem-desc">Cada afiliado tem o seu link. Cada venda é registada. Não há confusão sobre quem vendeu o quê.</div>
+      </div>
+      <div class="vantagem-card reveal">
+        <div class="vantagem-icon">✅</div>
+        <div class="vantagem-title">Afiliados aprovados</div>
+        <div class="vantagem-desc">Não aceitamos qualquer pessoa. Cada afiliado é analisado antes de entrar, o que protege produtores e compradores.</div>
+      </div>
+      <div class="vantagem-card reveal">
+        <div class="vantagem-icon">📊</div>
+        <div class="vantagem-title">Comissões transparentes</div>
+        <div class="vantagem-desc">Sabes exatamente quanto vais ganhar antes de promover. Sem surpresas, sem letras pequenas.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ZONA DE ENTREGA -->
+  <section class="zona-section">
+    <div class="section-tag reveal">Cobertura</div>
+    <h2 class="reveal">Entregamos nestes<br />bairros de Menongue.</h2>
+    <p class="section-desc reveal">Na primeira fase, a entrega física cobre os seguintes bairros. Mais zonas em breve.</p>
+    <div class="bairros-grid reveal">
+      <span class="bairro-tag">Cunha</span>
+      <span class="bairro-tag">Azul</span>
+      <span class="bairro-tag">Futungo</span>
+      <span class="bairro-tag">Castilho</span>
+      <span class="bairro-tag">Popular</span>
+      <span class="bairro-tag">Bom Dia Pequeno</span>
+      <span class="bairro-tag">Caimaneiro</span>
+      <span class="bairro-tag">Tunga</span>
+      <span class="bairro-tag">Fera</span>
+      <span class="bairro-tag">Bom Dia Grande</span>
+      <span class="bairro-tag">Jubileu</span>
+      <span class="bairro-tag">Hoji-ya-Henda</span>
+      <span class="bairro-tag">45 Casas</span>
+      <span class="bairro-tag">Saúde</span>
+      <span class="bairro-tag">Pandera</span>
+      <span class="bairro-tag">23 de Março</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- FORMULÁRIO -->
+  <section class="form-section" id="interesse">
+    <div class="section-tag reveal">Lista de espera</div>
+    <h2 class="reveal">Entra antes<br />de toda a gente.</h2>
+    <p class="section-desc reveal">A plataforma ainda está em construção. Regista o teu interesse agora e serás dos primeiros a ser contactado quando abrirmos.</p>
+
+    <div class="form-wrapper reveal">
+      <div id="form-content">
+        <div class="form-title">Quero entrar na Kubanza</div>
+        <div class="form-subtitle">Preenche os teus dados. Respondemos em menos de 48 horas.</div>
+
+        <div class="form-group">
+          <label>Nome completo</label>
+          <input type="text" id="nome" placeholder="O teu nome" />
+        </div>
+        <div class="form-group">
+          <label>Número de telefone (WhatsApp)</label>
+          <input type="tel" id="telefone" placeholder="+244 9XX XXX XXX" />
+        </div>
+        <div class="form-group">
+          <label>Bairro onde moras</label>
+          <input type="text" id="bairro" placeholder="Ex: Jubileu" />
+        </div>
+        <div class="form-group">
+          <label>Quero entrar como</label>
+          <select id="papel">
+            <option value="">Seleciona uma opção</option>
+            <option value="afiliado">Afiliado (quero promover e ganhar comissão)</option>
+            <option value="produtor">Produtor (tenho produtos para vender)</option>
+            <option value="ambos">Os dois</option>
+          </select>
+        </div>
+
+        <button class="form-submit" onclick="submitForm()">Registar interesse</button>
+        <p class="form-nota">Os teus dados são usados apenas para contacto. Nada mais.</p>
+      </div>
+
+      <div class="success-msg" id="success-msg">
+        <div class="check">✅</div>
+        <h3>Registo recebido!</h3>
+        <p>Obrigado, <span id="nome-confirmado"></span>. Vamos entrar em contacto contigo pelo WhatsApp em menos de 48 horas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Kubanza</div>
+    <div class="footer-desc">O mercado digital de Menongue. Feito em Angola, para Angola.</div>
+    <div class="footer-desc" style="margin-top:0.3rem;">© 2025 Kubanza. Todos os direitos reservados.</div>
+  </footer>
+
+  <script>
+    // TABS
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // SCROLL REVEAL
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // FORM
+    function submitForm() {
+      const nome = document.getElementById('nome').value.trim();
+      const telefone = document.getElementById('telefone').value.trim();
+      const bairro = document.getElementById('bairro').value.trim();
+      const papel = document.getElementById('papel').value;
+
+      if (!nome || !telefone || !bairro || !papel) {
+        alert('Por favor preenche todos os campos antes de continuar.');
+        return;
+      }
+
+      document.getElementById('form-content').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+      document.getElementById('nome-confirmado').textContent = nome.split(' ')[0];
+    }
+  </script>
+
+</body>
+</html>
