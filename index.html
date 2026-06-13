@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kubanza — O Mercado Digital de Angola</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -24,7 +24,7 @@
     body {
       background: var(--preto);
       color: var(--branco);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 16px;
       line-height: 1.6;
       overflow-x: hidden;
@@ -45,7 +45,7 @@
     }
 
     .logo {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 1.5rem;
       font-weight: 800;
       color: var(--laranja);
@@ -58,7 +58,7 @@
       border: none;
       padding: 0.55rem 1.3rem;
       border-radius: 6px;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-weight: 500;
       font-size: 0.9rem;
       cursor: pointer;
@@ -111,13 +111,17 @@
     }
 
     h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2.4rem, 8vw, 4.5rem);
+      font-family: 'Inter', sans-serif;
+      font-size: 1.75rem;
       font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -1.5px;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
       margin-bottom: 1.5rem;
       animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    @media (min-width: 768px) {
+      h1 { font-size: 3.5rem; letter-spacing: -1.5px; line-height: 1.05; }
     }
 
     h1 span { color: var(--laranja); }
@@ -143,7 +147,7 @@
       border: none;
       padding: 0.9rem 2rem;
       border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-weight: 500;
       font-size: 1rem;
       cursor: pointer;
@@ -159,7 +163,7 @@
       border: 1px solid rgba(255,255,255,0.15);
       padding: 0.9rem 2rem;
       border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-weight: 500;
       font-size: 1rem;
       cursor: pointer;
@@ -181,7 +185,7 @@
 
     .stat-item { display: flex; flex-direction: column; gap: 0.2rem; }
     .stat-num {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 1.8rem;
       font-weight: 800;
       color: var(--laranja);
@@ -201,12 +205,16 @@
     }
 
     h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-family: 'Inter', sans-serif;
+      font-size: 1.5rem;
       font-weight: 800;
-      letter-spacing: -1px;
-      line-height: 1.1;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
       margin-bottom: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      h2 { font-size: 2.6rem; letter-spacing: -1px; line-height: 1.1; }
     }
 
     .section-desc {
@@ -238,7 +246,7 @@
       background: transparent;
       color: var(--cinza);
       transition: all 0.2s;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
     }
     .tab.active { background: var(--laranja); color: var(--preto); }
 
@@ -260,7 +268,7 @@
     .step:hover { border-color: var(--laranja); }
 
     .step-num {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 1.4rem;
       font-weight: 800;
       color: var(--laranja);
@@ -270,7 +278,7 @@
     }
 
     .step-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-weight: 700;
       font-size: 1rem;
       margin-bottom: 0.3rem;
@@ -300,7 +308,7 @@
     }
 
     .vantagem-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-weight: 700;
       font-size: 1rem;
       margin-bottom: 0.5rem;
@@ -342,7 +350,7 @@
     }
 
     .form-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 1.4rem;
       font-weight: 800;
       margin-bottom: 0.4rem;
@@ -367,7 +375,7 @@
       color: var(--branco);
       padding: 0.8rem 1rem;
       border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 0.95rem;
       outline: none;
       transition: border-color 0.2s;
@@ -385,7 +393,7 @@
       border: none;
       padding: 1rem;
       border-radius: 8px;
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
@@ -412,7 +420,7 @@
       margin-bottom: 1rem;
     }
     .success-msg h3 {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 1.3rem;
       margin-bottom: 0.5rem;
     }
@@ -430,7 +438,7 @@
     }
 
     .footer-logo {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 1.3rem;
       font-weight: 800;
       color: var(--laranja);
@@ -632,7 +640,7 @@
   <section class="zona-section">
     <div class="section-tag reveal">Cobertura</div>
     <h2 class="reveal">Entregamos nestes<br />bairros de Menongue.</h2>
-    <p class="section-desc reveal">Na primeira fase, a entrega física cobre os seguintes bairros. Mais zonas em breve.</p>
+    <p class="section-desc reveal">Na primeira fase, a entrega dos produtos físicos cobre os bairros abaixo. Mais zonas em breve.</p>
     <div class="bairros-grid reveal">
       <span class="bairro-tag">Cunha</span>
       <span class="bairro-tag">Azul</span>
