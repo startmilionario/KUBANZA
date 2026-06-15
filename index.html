@@ -640,7 +640,7 @@
   <section class="zona-section">
     <div class="section-tag reveal">Cobertura</div>
     <h2 class="reveal">Entregamos nestes<br />bairros de Menongue.</h2>
-    <p class="section-desc reveal">Na primeira fase, a entrega dos produtos físicos cobre os bairros abaixo. Mais zonas em breve.</p>
+    <p class="section-desc reveal">Na primeira fase, a entrega dos produtos física cobre os bairros abaixo. Mais zonas em breve.</p>
     <div class="bairros-grid reveal">
       <span class="bairro-tag">Cunha</span>
       <span class="bairro-tag">Azul</span>
@@ -648,10 +648,10 @@
       <span class="bairro-tag">Castilho</span>
       <span class="bairro-tag">Popular</span>
       <span class="bairro-tag">Bom Dia Pequeno</span>
-      <span class="bairro-tag">Caimaneiro</span>
+      <span class="bairro-tag">Bom Dia Grande</span>
       <span class="bairro-tag">Tunga</span>
       <span class="bairro-tag">Fera</span>
-      <span class="bairro-tag">Bom Dia Grande</span>
+      <span class="bairro-tag">Caimanero</span>
       <span class="bairro-tag">Jubileu</span>
       <span class="bairro-tag">Hoji-ya-Henda</span>
       <span class="bairro-tag">45 Casas</span>
@@ -715,7 +715,15 @@
     <div class="footer-desc" style="margin-top:0.3rem;">© 2025 Kubanza. Todos os direitos reservados.</div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // SUPABASE
+    const { createClient } = supabase;
+    const db = createClient(
+      'https://ksnrqkaainzbabgueagf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzbnJxa2FhaW56YmFiZ3VlYWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NzMwMzMsImV4cCI6MjA5NzA0OTAzM30.Vf2JhtaBqXhU01T1Hz7-_lVeMTmzODnA2t2RoFn5IG0'
+    );
+
     // TABS
     function switchTab(tab) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -736,7 +744,7 @@
     reveals.forEach(el => observer.observe(el));
 
     // FORM
-    function submitForm() {
+    async function submitForm() {
       const nome = document.getElementById('nome').value.trim();
       const telefone = document.getElementById('telefone').value.trim();
       const bairro = document.getElementById('bairro').value.trim();
@@ -744,6 +752,19 @@
 
       if (!nome || !telefone || !bairro || !papel) {
         alert('Por favor preenche todos os campos antes de continuar.');
+        return;
+      }
+
+      const btn = document.querySelector('.form-submit');
+      btn.disabled = true;
+      btn.textContent = 'A enviar...';
+
+      const { error } = await db.from('registos').insert({ nome, telefone, bairro, papel, estado: 'pendente' });
+
+      if (error) {
+        btn.disabled = false;
+        btn.textContent = 'Registar interesse';
+        alert('Ocorreu um erro. Tenta novamente.');
         return;
       }
 
