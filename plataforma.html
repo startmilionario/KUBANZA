@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kubanza — Plataforma</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --laranja: #F56E0F;
+      --laranja-escuro: #C4550A;
+      --preto: #0A0A0A;
+      --preto-medio: #141414;
+      --card: #1A1A1A;
+      --branco: #FAFAFA;
+      --cinza: #888;
+      --borda: rgba(245,110,15,0.15);
+      --verde: #22c55e;
+      --vermelho: #ef4444;
+      --amarelo: #eab308;
+    }
+
+    body {
+      background: var(--preto);
+      color: var(--branco);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    /* LOGIN */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .login-box {
+      background: var(--card);
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .login-logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--laranja);
+      margin-bottom: 0.3rem;
+      letter-spacing: -1px;
+    }
+
+    .login-sub { color: var(--cinza); font-size: 0.85rem; margin-bottom: 2rem; }
+
+    .field { margin-bottom: 1.2rem; }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--cinza);
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+    }
+
+    input[type="password"], input[type="text"], input[type="tel"], input[type="number"], select, textarea {
+      width: 100%;
+      background: var(--preto);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--branco);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus, textarea:focus { border-color: var(--laranja); }
+    input::placeholder, textarea::placeholder { color: #444; }
+    select option { background: var(--card); }
+
+    .btn {
+      width: 100%;
+      background: var(--laranja);
+      color: var(--preto);
+      border: none;
+      padding: 0.85rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: inherit;
+    }
+    .btn:hover { background: var(--laranja-escuro); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-sm {
+      width: auto;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.2s;
+    }
+    .btn-sm:hover { opacity: 0.85; }
+    .btn-copiar { background: var(--laranja); color: #000; }
+    .btn-submeter { background: var(--verde); color: #000; }
+    .btn-danger { background: var(--vermelho); color: #fff; }
+
+    .erro-msg {
+      color: var(--vermelho);
+      font-size: 0.82rem;
+      margin-top: 0.8rem;
+      text-align: center;
+      display: none;
+    }
+
+    .primeiro-acesso-link {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      color: var(--cinza);
+    }
+
+    .primeiro-acesso-link span {
+      color: var(--laranja);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* APP */
+    #app { display: none; }
+
+    /* TOPBAR */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--borda);
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar-logo {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--laranja);
+      letter-spacing: -0.5px;
+    }
+
+    .topbar-right { display: flex; align-items: center; gap: 0.8rem; }
+    .topbar-user { font-size: 0.78rem; color: var(--cinza); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .btn-logout {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--cinza);
+      padding: 0.35rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ROLE TABS */
+    .role-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--borda);
+      background: var(--preto-medio);
+    }
+
+    .role-tab {
+      flex: 1;
+      padding: 0.9rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--cinza);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      font-family: inherit;
+      text-align: center;
+    }
+    .role-tab.active { color: var(--laranja); border-bottom-color: var(--laranja); }
+
+    /* NAV TABS */
+    .nav-tabs {
+      display: flex;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--borda);
+      background: var(--preto);
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .nav-tab {
+      flex-shrink: 0;
+      padding: 0.75rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--cinza);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      font-family: inherit;
+    }
+    .nav-tab.active { color: var(--laranja); border-bottom-color: var(--laranja); }
+
+    /* CONTENT */
+    .content { padding: 1.2rem; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .role-section { display: none; }
+    .role-section.active { display: block; }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      padding: 1.2rem;
+    }
+
+    .stat-label { font-size: 0.72rem; color: var(--cinza); margin-bottom: 0.4rem; }
+    .stat-num { font-size: 1.6rem; font-weight: 900; color: var(--laranja); line-height: 1; }
+
+    /* CARDS */
+    .item-card {
+      background: var(--card);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .item-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+      gap: 0.5rem;
+    }
+
+    .item-nome { font-weight: 700; font-size: 0.95rem; }
+    .item-detalhe { font-size: 0.8rem; color: var(--cinza); margin-bottom: 0.2rem; }
+
+    .item-actions { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 100px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-pendente { background: rgba(234,179,8,0.15); color: var(--amarelo); }
+    .badge-activo { background: rgba(34,197,94,0.15); color: var(--verde); }
+    .badge-concluida { background: rgba(34,197,94,0.15); color: var(--verde); }
+    .badge-cancelada { background: rgba(239,68,68,0.15); color: var(--vermelho); }
+    .badge-confirmada { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .badge-em-entrega { background: rgba(168,85,247,0.15); color: #c084fc; }
+
+    .tag-tipo {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .tag-digital { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .tag-fisico { background: rgba(245,110,15,0.15); color: var(--laranja); }
+
+    /* LINK BOX */
+    .link-box {
+      background: var(--preto);
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      font-size: 0.75rem;
+      color: var(--cinza);
+      word-break: break-all;
+      margin-top: 0.6rem;
+      font-family: monospace;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--borda);
+      border-radius: 16px 16px 0 0;
+      padding: 1.5rem 1.2rem 2rem;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--cinza);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    /* PRIMEIRO ACESSO */
+    #primeiro-acesso { display: none; }
+
+    .empty { text-align: center; color: var(--cinza); padding: 2rem; font-size: 0.85rem; }
+    .loading { text-align: center; color: var(--cinza); padding: 1.5rem; font-size: 0.85rem; }
+
+    .secao-titulo {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .divider { height: 1px; background: var(--borda); margin: 1.2rem 0; }
+
+    .info-box {
+      background: rgba(245,110,15,0.08);
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      font-size: 0.82rem;
+      color: var(--cinza);
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .copiado-msg {
+      font-size: 0.75rem;
+      color: var(--verde);
+      margin-top: 0.4rem;
+      display: none;
+    }
+
+    .perfil-card {
+      background: var(--card);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .perfil-nome { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .perfil-detalhe { font-size: 0.82rem; color: var(--cinza); margin-bottom: 0.2rem; }
+
+    .tag-papel {
+      display: inline-block;
+      font-size: 0.72rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 100px;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    .tag-afiliado { background: rgba(245,110,15,0.15); color: var(--laranja); }
+    .tag-produtor { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .tag-ambos { background: rgba(168,85,247,0.15); color: #c084fc; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div id="form-login">
+      <div class="login-logo">Kubanza</div>
+      <div class="login-sub">Acede à tua conta</div>
+      <div class="field">
+        <label>Número de telefone</label>
+        <input type="tel" id="login-tel" placeholder="+244 9XX XXX XXX" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="login-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()" />
+      </div>
+      <button class="btn" onclick="fazerLogin()">Entrar</button>
+      <div class="erro-msg" id="erro-login">Telefone ou password incorrectos.</div>
+      <div class="primeiro-acesso-link">
+        Primeiro acesso? <span onclick="mostrarPrimeiroAcesso()">Define a tua password aqui</span>
+      </div>
+    </div>
+
+    <!-- PRIMEIRO ACESSO -->
+    <div id="primeiro-acesso">
+      <div class="login-logo">Kubanza</div>
+      <div class="login-sub">Define a tua password de acesso</div>
+      <div class="info-box">
+        Apenas utilizadores aprovados pela Kubanza podem criar a sua password. O teu número de telefone tem de estar registado no sistema.
+      </div>
+      <div class="field">
+        <label>Número de telefone</label>
+        <input type="tel" id="pa-tel" placeholder="+244 9XX XXX XXX" />
+      </div>
+      <div class="field">
+        <label>Nova password</label>
+        <input type="password" id="pa-pw1" placeholder="Mínimo 6 caracteres" />
+      </div>
+      <div class="field">
+        <label>Confirmar password</label>
+        <input type="password" id="pa-pw2" placeholder="Repete a password" />
+      </div>
+      <button class="btn" onclick="definirPassword()">Guardar password</button>
+      <div class="erro-msg" id="erro-pa">Verifica os dados e tenta novamente.</div>
+      <div class="primeiro-acesso-link">
+        <span onclick="voltarLogin()">Voltar ao login</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-logo">Kubanza</div>
+    <div class="topbar-right">
+      <span class="topbar-user" id="topbar-nome"></span>
+      <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+    </div>
+  </div>
+
+  <!-- ROLE TABS (só para ambos) -->
+  <div class="role-tabs" id="role-tabs" style="display:none;">
+    <button class="role-tab active" onclick="switchRole('afiliado', this)">Afiliado</button>
+    <button class="role-tab" onclick="switchRole('produtor', this)">Produtor</button>
+  </div>
+
+  <!-- ÁREA AFILIADO -->
+  <div class="role-section active" id="role-afiliado">
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showTab('af', 'dashboard', this)">Dashboard</button>
+      <button class="nav-tab" onclick="showTab('af', 'produtos', this)">Produtos</button>
+      <button class="nav-tab" onclick="showTab('af', 'vendas', this)">Minhas vendas</button>
+      <button class="nav-tab" onclick="showTab('af', 'perfil', this)">Perfil</button>
+    </div>
+    <div class="content">
+      <div class="page active" id="af-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Vendas totais</div><div class="stat-num" id="af-stat-vendas">...</div></div>
+          <div class="stat-card"><div class="stat-label">Comissões (Kzs)</div><div class="stat-num" id="af-stat-comissoes">...</div></div>
+          <div class="stat-card"><div class="stat-label">Pendentes</div><div class="stat-num" id="af-stat-pendentes">...</div></div>
+          <div class="stat-card"><div class="stat-label">Concluídas</div><div class="stat-num" id="af-stat-concluidas">...</div></div>
+        </div>
+        <div class="secao-titulo">Últimas vendas</div>
+        <div id="af-ultimas-vendas"><div class="loading">A carregar...</div></div>
+      </div>
+
+      <div class="page" id="af-produtos">
+        <div class="info-box">Copia o teu link único para cada produto e partilha com os teus clientes. Cada venda feita pelo teu link regista automaticamente a tua comissão.</div>
+        <div id="af-lista-produtos"><div class="loading">A carregar...</div></div>
+      </div>
+
+      <div class="page" id="af-vendas">
+        <div id="af-lista-vendas"><div class="loading">A carregar...</div></div>
+      </div>
+
+      <div class="page" id="af-perfil">
+        <div id="af-perfil-info"><div class="loading">A carregar...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÁREA PRODUTOR -->
+  <div class="role-section" id="role-produtor">
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showTab('pr', 'dashboard', this)">Dashboard</button>
+      <button class="nav-tab" onclick="showTab('pr', 'produtos', this)">Os meus produtos</button>
+      <button class="nav-tab" onclick="showTab('pr', 'vendas', this)">Vendas</button>
+      <button class="nav-tab" onclick="showTab('pr', 'perfil', this)">Perfil</button>
+    </div>
+    <div class="content">
+      <div class="page active" id="pr-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Produtos activos</div><div class="stat-num" id="pr-stat-produtos">...</div></div>
+          <div class="stat-card"><div class="stat-label">Vendas totais</div><div class="stat-num" id="pr-stat-vendas">...</div></div>
+          <div class="stat-card"><div class="stat-label">Total faturado (Kzs)</div><div class="stat-num" id="pr-stat-faturado">...</div></div>
+          <div class="stat-card"><div class="stat-label">Pendentes</div><div class="stat-num" id="pr-stat-pendentes">...</div></div>
+        </div>
+        <div class="secao-titulo">Últimas vendas dos teus produtos</div>
+        <div id="pr-ultimas-vendas"><div class="loading">A carregar...</div></div>
+      </div>
+
+      <div class="page" id="pr-produtos">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+          <div class="secao-titulo" style="margin:0;">Os meus produtos</div>
+          <button class="btn-sm btn-submeter" onclick="abrirModalProduto()">+ Novo produto</button>
+        </div>
+        <div class="info-box">Os produtos submetidos ficam pendentes até serem aprovados pela Kubanza.</div>
+        <div id="pr-lista-produtos"><div class="loading">A carregar...</div></div>
+      </div>
+
+      <div class="page" id="pr-vendas">
+        <div id="pr-lista-vendas"><div class="loading">A carregar...</div></div>
+      </div>
+
+      <div class="page" id="pr-perfil">
+        <div id="pr-perfil-info"><div class="loading">A carregar...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PRODUTO -->
+<div class="modal-overlay" id="modal-produto">
+  <div class="modal">
+    <div class="modal-title">
+      Submeter produto
+      <button class="modal-close" onclick="fecharModal('modal-produto')">✕</button>
+    </div>
+    <div class="info-box">O teu produto será analisado pela equipa Kubanza antes de ficar disponível para os afiliados.</div>
+    <div class="field"><label>Nome do produto</label><input type="text" id="p-nome" placeholder="Ex: Curso de Excel" /></div>
+    <div class="field"><label>Descrição</label><textarea id="p-descricao" rows="3" placeholder="Descreve o teu produto..."></textarea></div>
+    <div class="field"><label>Preço (Kzs)</label><input type="number" id="p-preco" placeholder="5000" /></div>
+    <div class="field">
+      <label>Tipo de produto</label>
+      <select id="p-tipo">
+        <option value="digital">Digital</option>
+        <option value="fisico">Físico</option>
+      </select>
+    </div>
+    <div class="field"><label>Comissão para afiliados (%)</label><input type="number" id="p-comissao" placeholder="10" /></div>
+    <button class="btn" onclick="submeterProduto()">Submeter para aprovação</button>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://ksnrqkaainzbabgueagf.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzbnJxa2FhaW56YmFiZ3VlYWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NzMwMzMsImV4cCI6MjA5NzA0OTAzM30.Vf2JhtaBqXhU01T1Hz7-_lVeMTmzODnA2t2RoFn5IG0';
+
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let utilizadorActual = null;
+
+  // SESSÃO
+  function guardarSessao(user) {
+    localStorage.setItem('kubanza_user', JSON.stringify(user));
+  }
+
+  function carregarSessao() {
+    const s = localStorage.getItem('kubanza_user');
+    return s ? JSON.parse(s) : null;
+  }
+
+  function limparSessao() {
+    localStorage.removeItem('kubanza_user');
+  }
+
+  // INICIALIZAÇÃO
+  window.addEventListener('load', () => {
+    const sessao = carregarSessao();
+    if (sessao) {
+      utilizadorActual = sessao;
+      mostrarApp();
+    }
+  });
+
+  // LOGIN
+  async function fazerLogin() {
+    const tel = document.getElementById('login-tel').value.trim();
+    const pw = document.getElementById('login-pw').value.trim();
+    const erro = document.getElementById('erro-login');
+    erro.style.display = 'none';
+
+    if (!tel || !pw) { erro.style.display = 'block'; erro.textContent = 'Preenche todos os campos.'; return; }
+
+    const { data, error } = await db.from('utilizadores').select('*').eq('telefone', tel).eq('password', pw).eq('estado', 'activo').single();
+
+    if (error || !data) { erro.style.display = 'block'; erro.textContent = 'Telefone ou password incorrectos.'; return; }
+
+    await db.from('utilizadores').update({ ultimo_acesso: new Date().toISOString() }).eq('id', data.id);
+
+    utilizadorActual = data;
+    guardarSessao(data);
+    mostrarApp();
+  }
+
+  function fazerLogout() {
+    limparSessao();
+    utilizadorActual = null;
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('login-tel').value = '';
+    document.getElementById('login-pw').value = '';
+  }
+
+  // PRIMEIRO ACESSO
+  function mostrarPrimeiroAcesso() {
+    document.getElementById('form-login').style.display = 'none';
+    document.getElementById('primeiro-acesso').style.display = 'block';
+  }
+
+  function voltarLogin() {
+    document.getElementById('primeiro-acesso').style.display = 'none';
+    document.getElementById('form-login').style.display = 'block';
+  }
+
+  async function definirPassword() {
+    const tel = document.getElementById('pa-tel').value.trim();
+    const pw1 = document.getElementById('pa-pw1').value.trim();
+    const pw2 = document.getElementById('pa-pw2').value.trim();
+    const erro = document.getElementById('erro-pa');
+    erro.style.display = 'none';
+
+    if (!tel || !pw1 || !pw2) { erro.style.display = 'block'; erro.textContent = 'Preenche todos os campos.'; return; }
+    if (pw1.length < 6) { erro.style.display = 'block'; erro.textContent = 'A password deve ter pelo menos 6 caracteres.'; return; }
+    if (pw1 !== pw2) { erro.style.display = 'block'; erro.textContent = 'As passwords não coincidem.'; return; }
+
+    const { data, error } = await db.from('utilizadores').select('id, password').eq('telefone', tel).eq('estado', 'activo').single();
+
+    if (error || !data) { erro.style.display = 'block'; erro.textContent = 'Número não encontrado. Confirma que foste aprovado pela Kubanza.'; return; }
+    if (data.password) { erro.style.display = 'block'; erro.textContent = 'Este número já tem password definida. Usa o login normal.'; return; }
+
+    await db.from('utilizadores').update({ password: pw1 }).eq('telefone', tel);
+    alert('Password definida com sucesso! Podes agora fazer login.');
+    voltarLogin();
+  }
+
+  // MOSTRAR APP
+  function mostrarApp() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('topbar-nome').textContent = utilizadorActual.nome.split(' ')[0];
+
+    const papel = utilizadorActual.papel;
+
+    if (papel === 'ambos') {
+      document.getElementById('role-tabs').style.display = 'flex';
+      document.getElementById('role-afiliado').classList.add('active');
+      document.getElementById('role-produtor').classList.remove('active');
+      carregarDadosAfiliado();
+    } else if (papel === 'afiliado') {
+      document.getElementById('role-tabs').style.display = 'none';
+      document.getElementById('role-afiliado').classList.add('active');
+      document.getElementById('role-produtor').classList.remove('active');
+      carregarDadosAfiliado();
+    } else if (papel === 'produtor') {
+      document.getElementById('role-tabs').style.display = 'none';
+      document.getElementById('role-afiliado').classList.remove('active');
+      document.getElementById('role-produtor').classList.add('active');
+      carregarDadosProdutor();
+    }
+  }
+
+  // SWITCH ROLE (para ambos)
+  function switchRole(role, btn) {
+    document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    if (role === 'afiliado') {
+      document.getElementById('role-afiliado').classList.add('active');
+      document.getElementById('role-produtor').classList.remove('active');
+      carregarDadosAfiliado();
+    } else {
+      document.getElementById('role-produtor').classList.add('active');
+      document.getElementById('role-afiliado').classList.remove('active');
+      carregarDadosProdutor();
+    }
+  }
+
+  // NAVEGAÇÃO TABS
+  function showTab(prefix, id, btn) {
+    const container = btn.closest('.role-section') || btn.closest('#app');
+    container.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    container.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(prefix + '-' + id).classList.add('active');
+
+    if (prefix === 'af') {
+      if (id === 'produtos') carregarProdutosAfiliado();
+      if (id === 'vendas') carregarVendasAfiliado();
+      if (id === 'perfil') carregarPerfilAfiliado();
+    } else {
+      if (id === 'produtos') carregarProdutosProdutor();
+      if (id === 'vendas') carregarVendasProdutor();
+      if (id === 'perfil') carregarPerfilProdutor();
+    }
+  }
+
+  function abrirModal(id) { document.getElementById(id).classList.add('open'); }
+  function fecharModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  // =====================
+  // ÁREA DO AFILIADO
+  // =====================
+
+  async function carregarDadosAfiliado() {
+    const id = utilizadorActual.id;
+    const [{ data: vendas }, { count: pendentes }, { count: concluidas }] = await Promise.all([
+      db.from('vendas').select('comissao, estado').eq('afiliado_id', id),
+      db.from('vendas').select('id', {count:'exact'}).eq('afiliado_id', id).eq('estado','pendente'),
+      db.from('vendas').select('id', {count:'exact'}).eq('afiliado_id', id).eq('estado','concluida')
+    ]);
+
+    const total = vendas?.length ?? 0;
+    const comissoes = vendas?.filter(v => v.estado === 'concluida').reduce((s, v) => s + Number(v.comissao), 0) ?? 0;
+
+    document.getElementById('af-stat-vendas').textContent = total;
+    document.getElementById('af-stat-comissoes').textContent = comissoes.toLocaleString();
+    document.getElementById('af-stat-pendentes').textContent = pendentes ?? 0;
+    document.getElementById('af-stat-concluidas').textContent = concluidas ?? 0;
+
+    const { data: ultimas } = await db.from('vendas').select('*, produtos(nome)').eq('afiliado_id', id).order('created_at', {ascending:false}).limit(5);
+    const el = document.getElementById('af-ultimas-vendas');
+    if (!ultimas || ultimas.length === 0) { el.innerHTML = '<div class="empty">Ainda não tens vendas.</div>'; return; }
+    el.innerHTML = ultimas.map(v => `
+      <div class="item-card">
+        <div class="item-header">
+          <div class="item-nome">${v.comprador_nome}</div>
+          <span class="badge badge-${v.estado.replace(' ','-')}">${v.estado}</span>
+        </div>
+        <div class="item-detalhe">📦 ${v.produtos?.nome ?? 'N/A'}</div>
+        <div class="item-detalhe">💰 Comissão: ${Number(v.comissao).toLocaleString()} Kzs</div>
+      </div>
+    `).join('');
+  }
+
+  async function carregarProdutosAfiliado() {
+    const { data } = await db.from('produtos').select('*, utilizadores(nome)').eq('estado','activo');
+    const el = document.getElementById('af-lista-produtos');
+    if (!data || data.length === 0) { el.innerHTML = '<div class="empty">Ainda não há produtos disponíveis.</div>'; return; }
+    el.innerHTML = data.map(p => {
+      const link = `${window.location.origin}/kubanza-compra.html?produto=${p.id}&afiliado=${utilizadorActual.id}`;
+      return `
+        <div class="item-card">
+          <div class="item-header">
+            <div>
+              <div class="item-nome">${p.nome}</div>
+              <span class="tag-tipo tag-${p.tipo}">${p.tipo}</span>
+            </div>
+            <span style="font-size:0.85rem;font-weight:700;color:var(--laranja)">${Number(p.preco).toLocaleString()} Kzs</span>
+          </div>
+          <div class="item-detalhe">${p.descricao ?? ''}</div>
+          <div class="item-detalhe">👤 Produtor: ${p.utilizadores?.nome ?? 'N/A'}</div>
+          <div class="item-detalhe">💰 A tua comissão: ${p.comissao_percentagem}% = ${Math.round(p.preco * p.comissao_percentagem / 100).toLocaleString()} Kzs</div>
+          <div class="link-box" id="link-${p.id}">${link}</div>
+          <div class="item-actions">
+            <button class="btn-sm btn-copiar" onclick="copiarLink('${link}', 'msg-${p.id}')">📋 Copiar link</button>
+          </div>
+          <div class="copiado-msg" id="msg-${p.id}">✓ Link copiado!</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function copiarLink(link, msgId) {
+    navigator.clipboard.writeText(link).then(() => {
+      const msg = document.getElementById(msgId);
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 2000);
+    });
+  }
+
+  async function carregarVendasAfiliado() {
+    const { data } = await db.from('vendas').select('*, produtos(nome)').eq('afiliado_id', utilizadorActual.id).order('created_at', {ascending:false});
+    const el = document.getElementById('af-lista-vendas');
+    if (!data || data.length === 0) { el.innerHTML = '<div class="empty">Ainda não tens vendas registadas.</div>'; return; }
+    el.innerHTML = data.map(v => `
+      <div class="item-card">
+        <div class="item-header">
+          <div>
+            <div class="item-nome">${v.comprador_nome}</div>
+            <div class="item-detalhe">${v.produtos?.nome ?? 'N/A'}</div>
+          </div>
+          <span class="badge badge-${v.estado.replace(' ','-')}">${v.estado}</span>
+        </div>
+        <div class="item-detalhe">📞 ${v.comprador_telefone} · 📍 ${v.comprador_bairro}</div>
+        <div class="item-detalhe">💰 Valor: ${Number(v.valor).toLocaleString()} Kzs · Comissão: ${Number(v.comissao).toLocaleString()} Kzs</div>
+        <div class="item-detalhe">🕐 ${new Date(v.created_at).toLocaleDateString('pt-AO')}</div>
+      </div>
+    `).join('');
+  }
+
+  async function carregarPerfilAfiliado() {
+    const u = utilizadorActual;
+    document.getElementById('af-perfil-info').innerHTML = `
+      <div class="perfil-card">
+        <div class="perfil-nome">${u.nome}</div>
+        <div class="perfil-detalhe">📞 ${u.telefone}</div>
+        <div class="perfil-detalhe">📍 ${u.bairro}</div>
+        <span class="tag-papel tag-${u.papel}">${u.papel}</span>
+      </div>
+      <div class="info-box">Para alterar os teus dados ou password, contacta a Kubanza pelo WhatsApp.</div>
+    `;
+  }
+
+  // =====================
+  // ÁREA DO PRODUTOR
+  // =====================
+
+  async function carregarDadosProdutor() {
+    const id = utilizadorActual.id;
+    const [{ data: produtos }, { data: vendas }, { count: pendentes }] = await Promise.all([
+      db.from('produtos').select('id').eq('produtor_id', id).eq('estado','activo'),
+      db.from('vendas').select('valor, estado').eq('produto_id', 'in', []),
+      db.from('vendas').select('id', {count:'exact'}).eq('estado','pendente')
+    ]);
+
+    const { data: meusProdutos } = await db.from('produtos').select('id').eq('produtor_id', id).eq('estado','activo');
+    const produtoIds = (meusProdutos || []).map(p => p.id);
+
+    let totalVendas = 0, totalFaturado = 0, totalPendentes = 0;
+
+    if (produtoIds.length > 0) {
+      const { data: vendasData } = await db.from('vendas').select('valor, estado, comissao_percentagem:produtos(comissao_percentagem)').in('produto_id', produtoIds);
+      totalVendas = vendasData?.length ?? 0;
+      totalFaturado = vendasData?.filter(v => v.estado === 'concluida').reduce((s, v) => s + Number(v.valor), 0) ?? 0;
+      totalPendentes = vendasData?.filter(v => v.estado === 'pendente').length ?? 0;
+    }
+
+    document.getElementById('pr-stat-produtos').textContent = produtoIds.length;
+    document.getElementById('pr-stat-vendas').textContent = totalVendas;
+    document.getElementById('pr-stat-faturado').textContent = totalFaturado.toLocaleString();
+    document.getElementById('pr-stat-pendentes').textContent = totalPendentes;
+
+    const el = document.getElementById('pr-ultimas-vendas');
+    if (produtoIds.length === 0) { el.innerHTML = '<div class="empty">Ainda não tens produtos activos.</div>'; return; }
+
+    const { data: ultimas } = await db.from('vendas').select('*, produtos(nome), utilizadores(nome)').in('produto_id', produtoIds).order('created_at', {ascending:false}).limit(5);
+    if (!ultimas || ultimas.length === 0) { el.innerHTML = '<div class="empty">Ainda não há vendas dos teus produtos.</div>'; return; }
+    el.innerHTML = ultimas.map(v => `
+      <div class="item-card">
+        <div class="item-header">
+          <div class="item-nome">${v.comprador_nome}</div>
+          <span class="badge badge-${v.estado.replace(' ','-')}">${v.estado}</span>
+        </div>
+        <div class="item-detalhe">📦 ${v.produtos?.nome ?? 'N/A'}</div>
+        <div class="item-detalhe">👤 Afiliado: ${v.utilizadores?.nome ?? 'N/A'}</div>
+        <div class="item-detalhe">💰 ${Number(v.valor).toLocaleString()} Kzs</div>
+      </div>
+    `).join('');
+  }
+
+  async function carregarProdutosProdutor() {
+    const { data } = await db.from('produtos').select('*').eq('produtor_id', utilizadorActual.id).order('created_at', {ascending:false});
+    const el = document.getElementById('pr-lista-produtos');
+    if (!data || data.length === 0) { el.innerHTML = '<div class="empty">Ainda não tens produtos submetidos.</div>'; return; }
+    el.innerHTML = data.map(p => `
+      <div class="item-card">
+        <div class="item-header">
+          <div>
+            <div class="item-nome">${p.nome}</div>
+            <span class="tag-tipo tag-${p.tipo}">${p.tipo}</span>
+          </div>
+          <span class="badge badge-${p.estado}">${p.estado}</span>
+        </div>
+        <div class="item-detalhe">${p.descricao ?? ''}</div>
+        <div class="item-detalhe">💰 ${Number(p.preco).toLocaleString()} Kzs · Comissão afiliado: ${p.comissao_percentagem}%</div>
+      </div>
+    `).join('');
+  }
+
+  async function carregarVendasProdutor() {
+    const { data: meusProdutos } = await db.from('produtos').select('id').eq('produtor_id', utilizadorActual.id);
+    const produtoIds = (meusProdutos || []).map(p => p.id);
+    const el = document.getElementById('pr-lista-vendas');
+    if (produtoIds.length === 0) { el.innerHTML = '<div class="empty">Ainda não tens produtos activos.</div>'; return; }
+    const { data } = await db.from('vendas').select('*, produtos(nome), utilizadores(nome)').in('produto_id', produtoIds).order('created_at', {ascending:false});
+    if (!data || data.length === 0) { el.innerHTML = '<div class="empty">Ainda não há vendas dos teus produtos.</div>'; return; }
+    el.innerHTML = data.map(v => `
+      <div class="item-card">
+        <div class="item-header">
+          <div>
+            <div class="item-nome">${v.comprador_nome}</div>
+            <div class="item-detalhe">${v.produtos?.nome ?? 'N/A'}</div>
+          </div>
+          <span class="badge badge-${v.estado.replace(' ','-')}">${v.estado}</span>
+        </div>
+        <div class="item-detalhe">👤 Afiliado: ${v.utilizadores?.nome ?? 'N/A'}</div>
+        <div class="item-detalhe">📍 ${v.comprador_bairro} · 📞 ${v.comprador_telefone}</div>
+        <div class="item-detalhe">💰 ${Number(v.valor).toLocaleString()} Kzs · ${new Date(v.created_at).toLocaleDateString('pt-AO')}</div>
+      </div>
+    `).join('');
+  }
+
+  async function carregarPerfilProdutor() {
+    const u = utilizadorActual;
+    document.getElementById('pr-perfil-info').innerHTML = `
+      <div class="perfil-card">
+        <div class="perfil-nome">${u.nome}</div>
+        <div class="perfil-detalhe">📞 ${u.telefone}</div>
+        <div class="perfil-detalhe">📍 ${u.bairro}</div>
+        <span class="tag-papel tag-${u.papel}">${u.papel}</span>
+      </div>
+      <div class="info-box">Para alterar os teus dados ou password, contacta a Kubanza pelo WhatsApp.</div>
+    `;
+  }
+
+  // SUBMETER PRODUTO
+  function abrirModalProduto() { abrirModal('modal-produto'); }
+
+  async function submeterProduto() {
+    const nome = document.getElementById('p-nome').value.trim();
+    const descricao = document.getElementById('p-descricao').value.trim();
+    const preco = parseFloat(document.getElementById('p-preco').value);
+    const tipo = document.getElementById('p-tipo').value;
+    const comissao = parseFloat(document.getElementById('p-comissao').value) || 10;
+    if (!nome || !preco) return alert('Preenche o nome e o preço do produto.');
+    await db.from('produtos').insert({ nome, descricao, preco, tipo, comissao_percentagem: comissao, produtor_id: utilizadorActual.id, estado: 'pendente' });
+    fecharModal('modal-produto');
+    alert('Produto submetido com sucesso! A equipa Kubanza vai analisar em breve.');
+    carregarProdutosProdutor();
+  }
+</script>
+</body>
+</html>
