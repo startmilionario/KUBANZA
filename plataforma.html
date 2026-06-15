@@ -605,8 +605,16 @@
   });
 
   // LOGIN
+  function normalizarTelefone(tel) {
+    let t = tel.replace(/\s/g, '').replace(/-/g, '');
+    if (t.startsWith('00244')) t = '+244' + t.slice(5);
+    else if (t.startsWith('244') && !t.startsWith('+')) t = '+' + t;
+    else if (!t.startsWith('+') && t.length === 9) t = '+244' + t;
+    return t;
+  }
+
   async function fazerLogin() {
-    const tel = document.getElementById('login-tel').value.trim();
+    const tel = normalizarTelefone(document.getElementById('login-tel').value.trim());
     const pw = document.getElementById('login-pw').value.trim();
     const erro = document.getElementById('erro-login');
     erro.style.display = 'none';
@@ -645,7 +653,7 @@
   }
 
   async function definirPassword() {
-    const tel = document.getElementById('pa-tel').value.trim();
+    const tel = normalizarTelefone(document.getElementById('pa-tel').value.trim());
     const pw1 = document.getElementById('pa-pw1').value.trim();
     const pw2 = document.getElementById('pa-pw2').value.trim();
     const erro = document.getElementById('erro-pa');
