@@ -668,7 +668,8 @@
     if (error || !data) { erro.style.display = 'block'; erro.textContent = 'Número não encontrado. Confirma que foste aprovado pela Kubanza.'; return; }
     if (data.password) { erro.style.display = 'block'; erro.textContent = 'Este número já tem password definida. Usa o login normal.'; return; }
 
-    await db.from('utilizadores').update({ password: pw1 }).eq('telefone', tel);
+    const { error: erroRpc } = await db.rpc('definir_password', { p_telefone: tel, p_password: pw1 });
+if (erroRpc) { erro.style.display = 'block'; erro.textContent = 'Erro ao guardar password. Tenta novamente.'; return; }
     alert('Password definida com sucesso! Podes agora fazer login.');
     voltarLogin();
   }
