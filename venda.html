@@ -14,29 +14,81 @@
       --verde: #22c55e; --vermelho: #ef4444;
     }
     body { background: var(--preto); color: var(--branco); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
-    .topbar { background: rgba(10,10,10,0.95); border-bottom: 1px solid var(--borda); padding: 1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; }
+
+    /* BANNER URGÊNCIA */
+    .urgencia-banner {
+      background: linear-gradient(90deg, var(--vermelho), #dc2626);
+      padding: 0.6rem 1rem;
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 60;
+    }
+    .urgencia-timer { font-variant-numeric: tabular-nums; background: rgba(0,0,0,0.25); padding: 0.15rem 0.5rem; border-radius: 4px; }
+
+    .topbar { background: rgba(10,10,10,0.95); border-bottom: 1px solid var(--borda); padding: 0.9rem 1.2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 32px; z-index: 50; backdrop-filter: blur(10px); }
     .topbar-logo { font-size: 1.2rem; font-weight: 900; color: var(--laranja); }
+    .selo-confianca { font-size: 0.68rem; color: var(--cinza); display: flex; align-items: center; gap: 0.3rem; }
+
     .content { padding: 1.2rem; max-width: 520px; margin: 0 auto; }
-    .produto-img { width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 1.2rem; }
-    .produto-img-placeholder { width: 100%; height: 180px; background: var(--preto-medio); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--cinza); font-size: 3rem; margin-bottom: 1.2rem; }
-    .produto-nome { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
-    .produto-preco { font-size: 1.8rem; font-weight: 900; color: var(--laranja); margin-bottom: 0.8rem; }
-    .produto-desc { color: var(--cinza); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.2rem; }
-    .tag-tipo { display: inline-block; font-size: 0.72rem; padding: 0.25rem 0.7rem; border-radius: 100px; font-weight: 600; margin-bottom: 1rem; }
+
+    .produto-img-wrap { position: relative; margin-bottom: 1.2rem; }
+    .produto-img { width: 100%; height: 240px; object-fit: cover; border-radius: 14px; display: block; }
+    .produto-img-placeholder { width: 100%; height: 200px; background: linear-gradient(135deg, var(--preto-medio), #1f1f1f); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--cinza); font-size: 3rem; }
+    .desconto-badge { position: absolute; top: 12px; left: 12px; background: var(--vermelho); color: #fff; font-size: 0.72rem; font-weight: 800; padding: 0.35rem 0.7rem; border-radius: 6px; }
+
+    .tag-tipo { display: inline-block; font-size: 0.72rem; padding: 0.25rem 0.7rem; border-radius: 100px; font-weight: 600; margin-bottom: 0.8rem; }
     .tag-digital { background: rgba(59,130,246,0.15); color: #60a5fa; }
     .tag-fisico { background: rgba(245,110,15,0.15); color: var(--laranja); }
+
+    .produto-nome { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.6rem; line-height: 1.2; }
+    .produto-preco-wrap { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1rem; }
+    .produto-preco { font-size: 2rem; font-weight: 900; color: var(--laranja); }
+    .produto-preco-original { font-size: 1rem; color: var(--cinza); text-decoration: line-through; }
+    .produto-desc { color: #ccc; font-size: 0.92rem; line-height: 1.7; margin-bottom: 1.3rem; }
+
+    .beneficios-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 1.3rem; }
+    .beneficio-item { background: var(--card); border: 1px solid var(--borda); border-radius: 10px; padding: 0.8rem; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.3rem; }
+    .beneficio-icon { font-size: 1.3rem; }
+    .beneficio-texto { font-size: 0.7rem; color: var(--cinza); font-weight: 600; line-height: 1.3; }
+
+    .afiliado-badge { background: rgba(245,110,15,0.1); border: 1px solid var(--borda); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.78rem; color: var(--cinza); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+
+    .prova-social { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.3rem; padding: 0.7rem 0; border-top: 1px solid var(--borda); border-bottom: 1px solid var(--borda); }
+    .prova-avatares { display: flex; }
+    .prova-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--laranja); border: 2px solid var(--preto); margin-left: -8px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: #000; }
+    .prova-avatar:first-child { margin-left: 0; }
+    .prova-texto { font-size: 0.76rem; color: var(--cinza); }
+    .prova-texto strong { color: var(--branco); }
+
     .divider { height: 1px; background: var(--borda); margin: 1.2rem 0; }
     .secao-titulo { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
     .field { margin-bottom: 1.2rem; }
     label { display: block; font-size: 0.8rem; color: var(--cinza); margin-bottom: 0.4rem; font-weight: 500; }
-    input, select, textarea { width: 100%; background: var(--preto-medio); border: 1px solid rgba(255,255,255,0.1); color: var(--branco); padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; font-family: inherit; }
+    input, select, textarea { width: 100%; background: var(--preto-medio); border: 1px solid rgba(255,255,255,0.1); color: var(--branco); padding: 0.78rem 1rem; border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; font-family: inherit; }
     input:focus, select:focus, textarea:focus { border-color: var(--laranja); }
     input::placeholder, textarea::placeholder { color: #444; }
     select option { background: var(--card); }
-    .btn { width: 100%; background: var(--laranja); color: var(--preto); border: none; padding: 0.95rem; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+
+    .btn { width: 100%; background: var(--laranja); color: var(--preto); border: none; padding: 1rem; border-radius: 10px; font-size: 1.02rem; font-weight: 800; cursor: pointer; transition: background 0.2s, transform 0.1s; font-family: inherit; box-shadow: 0 4px 20px rgba(245,110,15,0.25); }
     .btn:hover { background: var(--laranja-escuro); }
+    .btn:active { transform: scale(0.98); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-voltar { width: 100%; background: transparent; border: 1px solid var(--borda); color: var(--cinza); padding: 0.8rem; border-radius: 8px; cursor: pointer; font-family: inherit; margin-top: 0.8rem; }
+
     .info-box { background: rgba(245,110,15,0.08); border: 1px solid var(--borda); border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.82rem; color: var(--cinza); margin-bottom: 1.2rem; line-height: 1.6; }
+
+    .checkout-urgencia { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; padding: 0.9rem 1rem; text-align: center; margin-bottom: 1.3rem; }
+    .checkout-urgencia-label { font-size: 0.75rem; color: var(--vermelho); font-weight: 700; margin-bottom: 0.3rem; }
+    .checkout-urgencia-timer { font-size: 1.3rem; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+
     .pagamento-box { background: var(--card); border: 1px solid var(--borda); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.2rem; }
     .pagamento-titulo { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
     .pagamento-linha { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--borda); font-size: 0.88rem; }
@@ -44,21 +96,26 @@
     .pagamento-label { color: var(--cinza); }
     .pagamento-valor { font-weight: 700; }
     .pagamento-valor.destaque { color: var(--laranja); font-size: 1.1rem; }
+
     .ref-box { background: var(--preto); border: 1px solid var(--laranja); border-radius: 8px; padding: 1rem; text-align: center; margin: 1rem 0; }
     .ref-label { font-size: 0.75rem; color: var(--cinza); margin-bottom: 0.3rem; }
     .ref-codigo { font-size: 1.4rem; font-weight: 900; color: var(--laranja); letter-spacing: 3px; }
     .btn-copiar-ref { background: transparent; border: 1px solid var(--borda); color: var(--cinza); padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.78rem; cursor: pointer; margin-top: 0.5rem; font-family: inherit; }
+
     .sucesso-box { text-align: center; padding: 2rem 1rem; }
     .sucesso-icon { font-size: 3rem; margin-bottom: 1rem; }
     .sucesso-titulo { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; }
     .sucesso-desc { color: var(--cinza); font-size: 0.88rem; line-height: 1.6; margin-bottom: 1.5rem; }
-    .whatsapp-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: #25D366; color: #000; border: none; padding: 0.9rem; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; font-family: inherit; text-decoration: none; }
-    .afiliado-badge { background: rgba(245,110,15,0.1); border: 1px solid var(--borda); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.78rem; color: var(--cinza); margin-bottom: 1rem; }
+
+    .whatsapp-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: #25D366; color: #000; border: none; padding: 0.95rem; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; font-family: inherit; text-decoration: none; }
+
     .loading-page { min-height: 60vh; display: flex; align-items: center; justify-content: center; color: var(--cinza); }
     .erro-page { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; gap: 1rem; color: var(--cinza); }
+
     .bairros-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
     .bairro-opt { background: var(--preto-medio); border: 1px solid rgba(255,255,255,0.1); color: var(--cinza); padding: 0.4rem 0.8rem; border-radius: 100px; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; }
     .bairro-opt.selected { background: var(--laranja); color: #000; border-color: var(--laranja); font-weight: 600; }
+
     #checkout { display: none; }
     #pagamento { display: none; }
     #sucesso { display: none; }
@@ -66,8 +123,13 @@
 </head>
 <body>
 
+<div class="urgencia-banner">
+  🔥 Oferta por tempo limitado — expira em <span class="urgencia-timer" id="banner-timer">30:00</span>
+</div>
+
 <div class="topbar">
   <div class="topbar-logo">Kubanza</div>
+  <div class="selo-confianca">🔒 Compra segura</div>
 </div>
 
 <div class="content">
@@ -80,17 +142,45 @@
 
   <!-- PÁGINA DO PRODUTO -->
   <div id="pagina-produto" style="display:none;">
-    <div id="produto-imagem"></div>
+    <div class="produto-img-wrap">
+      <div id="produto-imagem"></div>
+      <div class="desconto-badge">⚡ Oferta especial</div>
+    </div>
     <span id="produto-tipo-tag"></span>
     <div id="produto-nome" class="produto-nome"></div>
-    <div id="produto-preco" class="produto-preco"></div>
+    <div class="produto-preco-wrap">
+      <div id="produto-preco" class="produto-preco"></div>
+    </div>
     <div id="produto-desc" class="produto-desc"></div>
+
+    <div class="beneficios-grid">
+      <div class="beneficio-item"><div class="beneficio-icon">✅</div><div class="beneficio-texto">Pagamento seguro</div></div>
+      <div class="beneficio-item"><div class="beneficio-icon">🚀</div><div class="beneficio-texto">Entrega garantida</div></div>
+      <div class="beneficio-item"><div class="beneficio-icon">💬</div><div class="beneficio-texto">Suporte directo</div></div>
+      <div class="beneficio-item"><div class="beneficio-icon">🇦🇴</div><div class="beneficio-texto">100% Angolano</div></div>
+    </div>
+
     <div id="afiliado-badge" class="afiliado-badge"></div>
-    <button class="btn" onclick="mostrarCheckout()">Comprar agora</button>
+
+    <div class="prova-social">
+      <div class="prova-avatares">
+        <div class="prova-avatar">M</div>
+        <div class="prova-avatar">A</div>
+        <div class="prova-avatar">J</div>
+      </div>
+      <div class="prova-texto"><strong>Pessoas</strong> já compraram este produto via Kubanza</div>
+    </div>
+
+    <button class="btn" onclick="mostrarCheckout()">🛒 Comprar agora</button>
   </div>
 
   <!-- CHECKOUT -->
   <div id="checkout">
+    <div class="checkout-urgencia">
+      <div class="checkout-urgencia-label">⏱️ Esta encomenda expira em</div>
+      <div class="checkout-urgencia-timer" id="checkout-timer">30:00</div>
+    </div>
+
     <div class="secao-titulo">Os teus dados</div>
     <div class="field"><label>Nome completo</label><input type="text" id="c-nome" placeholder="O teu nome completo" /></div>
     <div class="field"><label>Número de telefone</label><input type="tel" id="c-tel" placeholder="+244 9XX XXX XXX" /></div>
@@ -127,8 +217,7 @@
       <div class="pagamento-linha"><span class="pagamento-label">Total a pagar</span><span class="pagamento-valor destaque" id="resumo-preco"></span></div>
     </div>
     <button class="btn" onclick="confirmarEncomenda()">Confirmar encomenda</button>
-    <br/><br/>
-    <button style="width:100%;background:transparent;border:1px solid var(--borda);color:var(--cinza);padding:0.8rem;border-radius:8px;cursor:pointer;font-family:inherit;" onclick="voltarProduto()">Voltar</button>
+    <button class="btn-voltar" onclick="voltarProduto()">Voltar</button>
   </div>
 
   <!-- PAGAMENTO -->
@@ -157,9 +246,7 @@
       ⏱️ Após efectuar o pagamento, envia o comprovativo com o teu código de referência para o nosso WhatsApp. O teu produto será enviado em até <strong>30 minutos</strong> durante o horário de funcionamento (08h00 às 22h00).
     </div>
 
-    <a id="btn-whatsapp-pag" class="whatsapp-btn" target="_blank">
-      <span>💬</span> Enviar comprovativo no WhatsApp
-    </a>
+    <a id="btn-whatsapp-pag" class="whatsapp-btn" target="_blank"><span>💬</span> Enviar comprovativo no WhatsApp</a>
   </div>
 
   <!-- SUCESSO FÍSICO -->
@@ -170,9 +257,7 @@
       <div class="sucesso-desc" id="sucesso-desc"></div>
     </div>
     <div class="info-box">O motoboy irá contactar-te antes da entrega. O pagamento é feito no momento em que receberes o produto.</div>
-    <a id="btn-whatsapp-suc" class="whatsapp-btn" target="_blank">
-      <span>💬</span> Falar com a Kubanza
-    </a>
+    <a id="btn-whatsapp-suc" class="whatsapp-btn" target="_blank"><span>💬</span> Falar com a Kubanza</a>
   </div>
 </div>
 
@@ -185,8 +270,9 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let produto = null;
 let afiliadoId = null;
-let vendaId = null;
 let refCodigo = null;
+let segundosRestantes = 30 * 60;
+let timerInterval = null;
 
 function normalizarTelefone(tel) {
   let t = tel.replace(/\s/g,'').replace(/-/g,'');
@@ -196,25 +282,42 @@ function normalizarTelefone(tel) {
   return t;
 }
 
-function gerarRef() {
-  return 'KBZ' + Date.now().toString().slice(-6).toUpperCase();
-}
+function gerarRef() { return 'KBZ' + Date.now().toString().slice(-6).toUpperCase(); }
 
 function getParams() {
   const p = new URLSearchParams(window.location.search);
   return { produtoId: p.get('produto'), afiliadoId: p.get('afiliado') };
 }
 
+function formatarTempo(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+function iniciarContador() {
+  timerInterval = setInterval(() => {
+    if (segundosRestantes <= 0) {
+      clearInterval(timerInterval);
+      segundosRestantes = 30 * 60;
+      return;
+    }
+    segundosRestantes--;
+    const formatado = formatarTempo(segundosRestantes);
+    const bannerEl = document.getElementById('banner-timer');
+    const checkoutEl = document.getElementById('checkout-timer');
+    if (bannerEl) bannerEl.textContent = formatado;
+    if (checkoutEl) checkoutEl.textContent = formatado;
+  }, 1000);
+}
+
 window.addEventListener('load', async () => {
+  iniciarContador();
   const { produtoId, afiliadoId: afId } = getParams();
   afiliadoId = afId;
-
   if (!produtoId) { mostrarErro(); return; }
-
   const { data, error } = await db.from('produtos').select('*, utilizadores(nome)').eq('id', produtoId).eq('estado','activo').single();
-
   if (error || !data) { mostrarErro(); return; }
-
   produto = data;
   mostrarProduto();
 });
@@ -227,39 +330,27 @@ function mostrarErro() {
 function mostrarProduto() {
   document.getElementById('loading-page').style.display = 'none';
   document.getElementById('pagina-produto').style.display = 'block';
-
   const imgEl = document.getElementById('produto-imagem');
-  imgEl.innerHTML = produto.imagem
-    ? `<img src="${produto.imagem}" class="produto-img" />`
-    : `<div class="produto-img-placeholder">📦</div>`;
-
+  imgEl.innerHTML = produto.imagem ? `<img src="${produto.imagem}" class="produto-img" />` : `<div class="produto-img-placeholder">📦</div>`;
   document.getElementById('produto-tipo-tag').innerHTML = `<span class="tag-tipo tag-${produto.tipo}">${produto.tipo}</span>`;
   document.getElementById('produto-nome').textContent = produto.nome;
   document.getElementById('produto-preco').textContent = Number(produto.preco).toLocaleString() + ' Kzs';
   document.getElementById('produto-desc').textContent = produto.descricao ?? '';
-
-  if (afiliadoId) {
-    document.getElementById('afiliado-badge').textContent = `🔗 Recomendado por um afiliado Kubanza`;
-    document.getElementById('afiliado-badge').style.display = 'block';
-  } else {
-    document.getElementById('afiliado-badge').style.display = 'none';
-  }
-
+  const badge = document.getElementById('afiliado-badge');
+  if (afiliadoId) { badge.innerHTML = `🔗 Recomendado por um afiliado Kubanza`; badge.style.display = 'flex'; }
+  else { badge.style.display = 'none'; }
   document.title = `Kubanza — ${produto.nome}`;
 }
 
 function mostrarCheckout() {
   document.getElementById('pagina-produto').style.display = 'none';
   document.getElementById('checkout').style.display = 'block';
-
   document.getElementById('resumo-nome').textContent = produto.nome;
   document.getElementById('resumo-tipo').textContent = produto.tipo;
   document.getElementById('resumo-preco').textContent = Number(produto.preco).toLocaleString() + ' Kzs';
-
   const hoje = new Date().toISOString().split('T')[0];
   document.getElementById('c-data').value = hoje;
   document.getElementById('c-data').min = hoje;
-
   if (produto.tipo === 'fisico') {
     document.getElementById('campo-bairro').style.display = 'block';
     document.getElementById('campo-agendamento').style.display = 'block';
@@ -267,15 +358,16 @@ function mostrarCheckout() {
     document.getElementById('campo-bairro').style.display = 'none';
     document.getElementById('campo-agendamento').style.display = 'none';
   }
-
   document.getElementById('c-canal').addEventListener('change', function() {
     document.getElementById('campo-email').style.display = this.value === 'email' ? 'block' : 'none';
   });
+  window.scrollTo(0,0);
 }
 
 function voltarProduto() {
   document.getElementById('checkout').style.display = 'none';
   document.getElementById('pagina-produto').style.display = 'block';
+  window.scrollTo(0,0);
 }
 
 async function confirmarEncomenda() {
@@ -285,49 +377,26 @@ async function confirmarEncomenda() {
   const email = document.getElementById('c-email').value.trim();
   const bairro = document.getElementById('c-bairro').value;
   const data = document.getElementById('c-data').value;
-
   if (!nome || !tel) { alert('Preenche o nome e o telefone.'); return; }
   if (canal === 'email' && !email) { alert('Preenche o teu email.'); return; }
   if (produto.tipo === 'fisico' && !bairro) { alert('Selecciona o teu bairro de entrega.'); return; }
-
   const btn = document.querySelector('#checkout .btn');
   btn.disabled = true;
   btn.textContent = 'A registar...';
-
   refCodigo = gerarRef();
   const comissao = afiliadoId ? produto.preco * produto.comissao_percentagem / 100 : 0;
   const data_entrega = produto.tipo === 'fisico' && data ? new Date(data + 'T09:00:00').toISOString() : null;
   const observacoes = canal !== 'whatsapp' ? `Enviar por ${canal}${canal === 'email' ? ': ' + email : ''}` : null;
-
   const insercao = {
-    produto_id: produto.id,
-    afiliado_id: afiliadoId ? parseInt(afiliadoId) : null,
-    comprador_nome: nome,
-    comprador_telefone: tel,
-    comprador_bairro: bairro || 'N/A',
-    valor: produto.preco,
-    comissao,
-    estado: 'pendente',
-    data_entrega,
+    produto_id: produto.id, afiliado_id: afiliadoId ? parseInt(afiliadoId) : null,
+    comprador_nome: nome, comprador_telefone: tel, comprador_bairro: bairro || 'N/A',
+    valor: produto.preco, comissao, estado: 'pendente', data_entrega,
     observacoes: observacoes ?? `Ref: ${refCodigo}`
   };
-
   const { data: venda, error } = await db.from('vendas').insert(insercao).select().single();
-
-  if (error) {
-    btn.disabled = false;
-    btn.textContent = 'Confirmar encomenda';
-    alert('Erro ao registar. Tenta novamente.');
-    return;
-  }
-
-  vendaId = venda.id;
-
-  if (produto.tipo === 'digital') {
-    mostrarPagamento(nome, tel);
-  } else {
-    mostrarSucessoFisico(nome, bairro, data);
-  }
+  if (error) { btn.disabled = false; btn.textContent = 'Confirmar encomenda'; alert('Erro ao registar. Tenta novamente.'); return; }
+  if (produto.tipo === 'digital') mostrarPagamento(nome, tel);
+  else mostrarSucessoFisico(nome, bairro, data);
 }
 
 function mostrarPagamento(nome, tel) {
@@ -335,28 +404,22 @@ function mostrarPagamento(nome, tel) {
   document.getElementById('pagamento').style.display = 'block';
   document.getElementById('pag-valor').textContent = Number(produto.preco).toLocaleString() + ' Kzs';
   document.getElementById('pag-ref').textContent = refCodigo;
-
   const msg = `Olá Kubanza! 👋\n\nEstou a enviar o comprovativo de pagamento.\n\n📦 Produto: ${produto.nome}\n💰 Valor: ${Number(produto.preco).toLocaleString()} Kzs\n🔑 Referência: ${refCodigo}\n👤 Nome: ${nome}\n📞 Telefone: ${tel}\n\nAguardo o meu produto. Obrigado!`;
-
   document.getElementById('btn-whatsapp-pag').href = `https://wa.me/${KUBANZA_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+  window.scrollTo(0,0);
 }
 
 function mostrarSucessoFisico(nome, bairro, data) {
   document.getElementById('checkout').style.display = 'none';
   document.getElementById('sucesso').style.display = 'block';
-
   const dataFormatada = data ? new Date(data + 'T09:00:00').toLocaleDateString('pt-AO', {weekday:'long', day:'numeric', month:'long'}) : 'em breve';
   document.getElementById('sucesso-desc').textContent = `${nome}, a tua encomenda foi registada para entrega no bairro ${bairro} ${dataFormatada}. O motoboy irá contactar-te antes de sair.`;
-
   const msg = `Olá Kubanza! 👋\n\nFiz uma encomenda de produto físico.\n\n📦 Produto: ${produto.nome}\n👤 Nome: ${nome}\n📍 Bairro: ${bairro}\n📅 Data: ${dataFormatada}`;
   document.getElementById('btn-whatsapp-suc').href = `https://wa.me/${KUBANZA_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+  window.scrollTo(0,0);
 }
 
-function copiarRef() {
-  navigator.clipboard.writeText(refCodigo).then(() => {
-    alert('Código copiado!');
-  });
-}
+function copiarRef() { navigator.clipboard.writeText(refCodigo).then(() => alert('Código copiado!')); }
 </script>
 </body>
 </html>
