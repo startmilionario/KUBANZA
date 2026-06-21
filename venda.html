@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kubanza — Produto</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --laranja: #F56E0F; --laranja-escuro: #C4550A;
+      --preto: #0A0A0A; --preto-medio: #141414; --card: #1A1A1A;
+      --branco: #FAFAFA; --cinza: #888; --borda: rgba(245,110,15,0.15);
+      --verde: #22c55e; --vermelho: #ef4444;
+    }
+    body { background: var(--preto); color: var(--branco); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+    .topbar { background: rgba(10,10,10,0.95); border-bottom: 1px solid var(--borda); padding: 1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; }
+    .topbar-logo { font-size: 1.2rem; font-weight: 900; color: var(--laranja); }
+    .content { padding: 1.2rem; max-width: 520px; margin: 0 auto; }
+    .produto-img { width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 1.2rem; }
+    .produto-img-placeholder { width: 100%; height: 180px; background: var(--preto-medio); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--cinza); font-size: 3rem; margin-bottom: 1.2rem; }
+    .produto-nome { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
+    .produto-preco { font-size: 1.8rem; font-weight: 900; color: var(--laranja); margin-bottom: 0.8rem; }
+    .produto-desc { color: var(--cinza); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.2rem; }
+    .tag-tipo { display: inline-block; font-size: 0.72rem; padding: 0.25rem 0.7rem; border-radius: 100px; font-weight: 600; margin-bottom: 1rem; }
+    .tag-digital { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .tag-fisico { background: rgba(245,110,15,0.15); color: var(--laranja); }
+    .divider { height: 1px; background: var(--borda); margin: 1.2rem 0; }
+    .secao-titulo { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+    .field { margin-bottom: 1.2rem; }
+    label { display: block; font-size: 0.8rem; color: var(--cinza); margin-bottom: 0.4rem; font-weight: 500; }
+    input, select, textarea { width: 100%; background: var(--preto-medio); border: 1px solid rgba(255,255,255,0.1); color: var(--branco); padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; font-family: inherit; }
+    input:focus, select:focus, textarea:focus { border-color: var(--laranja); }
+    input::placeholder, textarea::placeholder { color: #444; }
+    select option { background: var(--card); }
+    .btn { width: 100%; background: var(--laranja); color: var(--preto); border: none; padding: 0.95rem; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+    .btn:hover { background: var(--laranja-escuro); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .info-box { background: rgba(245,110,15,0.08); border: 1px solid var(--borda); border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.82rem; color: var(--cinza); margin-bottom: 1.2rem; line-height: 1.6; }
+    .pagamento-box { background: var(--card); border: 1px solid var(--borda); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.2rem; }
+    .pagamento-titulo { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+    .pagamento-linha { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--borda); font-size: 0.88rem; }
+    .pagamento-linha:last-child { border-bottom: none; }
+    .pagamento-label { color: var(--cinza); }
+    .pagamento-valor { font-weight: 700; }
+    .pagamento-valor.destaque { color: var(--laranja); font-size: 1.1rem; }
+    .ref-box { background: var(--preto); border: 1px solid var(--laranja); border-radius: 8px; padding: 1rem; text-align: center; margin: 1rem 0; }
+    .ref-label { font-size: 0.75rem; color: var(--cinza); margin-bottom: 0.3rem; }
+    .ref-codigo { font-size: 1.4rem; font-weight: 900; color: var(--laranja); letter-spacing: 3px; }
+    .btn-copiar-ref { background: transparent; border: 1px solid var(--borda); color: var(--cinza); padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.78rem; cursor: pointer; margin-top: 0.5rem; font-family: inherit; }
+    .sucesso-box { text-align: center; padding: 2rem 1rem; }
+    .sucesso-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .sucesso-titulo { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .sucesso-desc { color: var(--cinza); font-size: 0.88rem; line-height: 1.6; margin-bottom: 1.5rem; }
+    .whatsapp-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: #25D366; color: #000; border: none; padding: 0.9rem; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; font-family: inherit; text-decoration: none; }
+    .afiliado-badge { background: rgba(245,110,15,0.1); border: 1px solid var(--borda); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.78rem; color: var(--cinza); margin-bottom: 1rem; }
+    .loading-page { min-height: 60vh; display: flex; align-items: center; justify-content: center; color: var(--cinza); }
+    .erro-page { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; gap: 1rem; color: var(--cinza); }
+    .bairros-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+    .bairro-opt { background: var(--preto-medio); border: 1px solid rgba(255,255,255,0.1); color: var(--cinza); padding: 0.4rem 0.8rem; border-radius: 100px; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; }
+    .bairro-opt.selected { background: var(--laranja); color: #000; border-color: var(--laranja); font-weight: 600; }
+    #checkout { display: none; }
+    #pagamento { display: none; }
+    #sucesso { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">Kubanza</div>
+</div>
+
+<div class="content">
+  <div id="loading-page" class="loading-page">A carregar produto...</div>
+  <div id="erro-page" class="erro-page" style="display:none;">
+    <div style="font-size:3rem;">😕</div>
+    <div style="font-size:1rem;font-weight:700;">Produto não encontrado</div>
+    <div>O link que usaste pode estar incorrecto ou o produto foi removido.</div>
+  </div>
+
+  <!-- PÁGINA DO PRODUTO -->
+  <div id="pagina-produto" style="display:none;">
+    <div id="produto-imagem"></div>
+    <span id="produto-tipo-tag"></span>
+    <div id="produto-nome" class="produto-nome"></div>
+    <div id="produto-preco" class="produto-preco"></div>
+    <div id="produto-desc" class="produto-desc"></div>
+    <div id="afiliado-badge" class="afiliado-badge"></div>
+    <button class="btn" onclick="mostrarCheckout()">Comprar agora</button>
+  </div>
+
+  <!-- CHECKOUT -->
+  <div id="checkout">
+    <div class="secao-titulo">Os teus dados</div>
+    <div class="field"><label>Nome completo</label><input type="text" id="c-nome" placeholder="O teu nome completo" /></div>
+    <div class="field"><label>Número de telefone</label><input type="tel" id="c-tel" placeholder="+244 9XX XXX XXX" /></div>
+    <div class="field">
+      <label>Como preferes receber o produto?</label>
+      <select id="c-canal">
+        <option value="whatsapp">WhatsApp</option>
+        <option value="sms">SMS</option>
+        <option value="email">Email</option>
+      </select>
+    </div>
+    <div class="field" id="campo-email" style="display:none;"><label>Email</label><input type="email" id="c-email" placeholder="exemplo@email.com" /></div>
+    <div id="campo-bairro" class="field" style="display:none;">
+      <label>Bairro de entrega</label>
+      <select id="c-bairro">
+        <option value="">Selecciona o teu bairro</option>
+        <option>Cunha</option><option>Azul</option><option>Futungo</option>
+        <option>Castilho</option><option>Popular</option><option>Bom Dia Pequeno</option>
+        <option>Caimaneiro</option><option>Tunga</option><option>Fera</option>
+        <option>Bom Dia Grande</option><option>Jubileu</option><option>Hoji-ya-Henda</option>
+        <option>45 Casas</option><option>Saúde</option><option>Pandera</option>
+        <option>23 de Março</option>
+      </select>
+    </div>
+    <div id="campo-agendamento" class="field" style="display:none;">
+      <label>Data preferida de entrega</label>
+      <input type="date" id="c-data" />
+    </div>
+    <div class="divider"></div>
+    <div class="pagamento-box">
+      <div class="pagamento-titulo">Resumo da encomenda</div>
+      <div class="pagamento-linha"><span class="pagamento-label">Produto</span><span class="pagamento-valor" id="resumo-nome"></span></div>
+      <div class="pagamento-linha" id="resumo-tipo-linha"><span class="pagamento-label">Tipo</span><span class="pagamento-valor" id="resumo-tipo"></span></div>
+      <div class="pagamento-linha"><span class="pagamento-label">Total a pagar</span><span class="pagamento-valor destaque" id="resumo-preco"></span></div>
+    </div>
+    <button class="btn" onclick="confirmarEncomenda()">Confirmar encomenda</button>
+    <br/><br/>
+    <button style="width:100%;background:transparent;border:1px solid var(--borda);color:var(--cinza);padding:0.8rem;border-radius:8px;cursor:pointer;font-family:inherit;" onclick="voltarProduto()">Voltar</button>
+  </div>
+
+  <!-- PAGAMENTO -->
+  <div id="pagamento">
+    <div class="sucesso-box">
+      <div class="sucesso-icon">✅</div>
+      <div class="sucesso-titulo">Encomenda registada!</div>
+      <div class="sucesso-desc">Agora efectua o pagamento com os dados abaixo e envia o comprovativo para o nosso WhatsApp.</div>
+    </div>
+
+    <div class="pagamento-box">
+      <div class="pagamento-titulo">Dados de pagamento</div>
+      <div class="pagamento-linha"><span class="pagamento-label">Multicaixa Express</span><span class="pagamento-valor">+244 9XX XXX XXX</span></div>
+      <div class="pagamento-linha"><span class="pagamento-label">Conta BFA</span><span class="pagamento-valor">0000 0000 0000 00</span></div>
+      <div class="pagamento-linha"><span class="pagamento-label">Nome</span><span class="pagamento-valor">Kubanza</span></div>
+      <div class="pagamento-linha"><span class="pagamento-label">Valor exacto</span><span class="pagamento-valor destaque" id="pag-valor"></span></div>
+    </div>
+
+    <div class="ref-box">
+      <div class="ref-label">O teu código de referência</div>
+      <div class="ref-codigo" id="pag-ref"></div>
+      <button class="btn-copiar-ref" onclick="copiarRef()">📋 Copiar código</button>
+    </div>
+
+    <div class="info-box">
+      ⏱️ Após efectuar o pagamento, envia o comprovativo com o teu código de referência para o nosso WhatsApp. O teu produto será enviado em até <strong>30 minutos</strong> durante o horário de funcionamento (08h00 às 22h00).
+    </div>
+
+    <a id="btn-whatsapp-pag" class="whatsapp-btn" target="_blank">
+      <span>💬</span> Enviar comprovativo no WhatsApp
+    </a>
+  </div>
+
+  <!-- SUCESSO FÍSICO -->
+  <div id="sucesso">
+    <div class="sucesso-box">
+      <div class="sucesso-icon">🏍️</div>
+      <div class="sucesso-titulo">Venda agendada!</div>
+      <div class="sucesso-desc" id="sucesso-desc"></div>
+    </div>
+    <div class="info-box">O motoboy irá contactar-te antes da entrega. O pagamento é feito no momento em que receberes o produto.</div>
+    <a id="btn-whatsapp-suc" class="whatsapp-btn" target="_blank">
+      <span>💬</span> Falar com a Kubanza
+    </a>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://ksnrqkaainzbabgueagf.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzbnJxa2FhaW56YmFiZ3VlYWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NzMwMzMsImV4cCI6MjA5NzA0OTAzM30.Vf2JhtaBqXhU01T1Hz7-_lVeMTmzODnA2t2RoFn5IG0';
+const KUBANZA_WHATSAPP = '244934487038';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let produto = null;
+let afiliadoId = null;
+let vendaId = null;
+let refCodigo = null;
+
+function normalizarTelefone(tel) {
+  let t = tel.replace(/\s/g,'').replace(/-/g,'');
+  if (t.startsWith('00244')) t = '+244' + t.slice(5);
+  else if (t.startsWith('244') && !t.startsWith('+')) t = '+' + t;
+  else if (!t.startsWith('+') && t.length === 9) t = '+244' + t;
+  return t;
+}
+
+function gerarRef() {
+  return 'KBZ' + Date.now().toString().slice(-6).toUpperCase();
+}
+
+function getParams() {
+  const p = new URLSearchParams(window.location.search);
+  return { produtoId: p.get('produto'), afiliadoId: p.get('afiliado') };
+}
+
+window.addEventListener('load', async () => {
+  const { produtoId, afiliadoId: afId } = getParams();
+  afiliadoId = afId;
+
+  if (!produtoId) { mostrarErro(); return; }
+
+  const { data, error } = await db.from('produtos').select('*, utilizadores(nome)').eq('id', produtoId).eq('estado','activo').single();
+
+  if (error || !data) { mostrarErro(); return; }
+
+  produto = data;
+  mostrarProduto();
+});
+
+function mostrarErro() {
+  document.getElementById('loading-page').style.display = 'none';
+  document.getElementById('erro-page').style.display = 'flex';
+}
+
+function mostrarProduto() {
+  document.getElementById('loading-page').style.display = 'none';
+  document.getElementById('pagina-produto').style.display = 'block';
+
+  const imgEl = document.getElementById('produto-imagem');
+  imgEl.innerHTML = produto.imagem
+    ? `<img src="${produto.imagem}" class="produto-img" />`
+    : `<div class="produto-img-placeholder">📦</div>`;
+
+  document.getElementById('produto-tipo-tag').innerHTML = `<span class="tag-tipo tag-${produto.tipo}">${produto.tipo}</span>`;
+  document.getElementById('produto-nome').textContent = produto.nome;
+  document.getElementById('produto-preco').textContent = Number(produto.preco).toLocaleString() + ' Kzs';
+  document.getElementById('produto-desc').textContent = produto.descricao ?? '';
+
+  if (afiliadoId) {
+    document.getElementById('afiliado-badge').textContent = `🔗 Recomendado por um afiliado Kubanza`;
+    document.getElementById('afiliado-badge').style.display = 'block';
+  } else {
+    document.getElementById('afiliado-badge').style.display = 'none';
+  }
+
+  document.title = `Kubanza — ${produto.nome}`;
+}
+
+function mostrarCheckout() {
+  document.getElementById('pagina-produto').style.display = 'none';
+  document.getElementById('checkout').style.display = 'block';
+
+  document.getElementById('resumo-nome').textContent = produto.nome;
+  document.getElementById('resumo-tipo').textContent = produto.tipo;
+  document.getElementById('resumo-preco').textContent = Number(produto.preco).toLocaleString() + ' Kzs';
+
+  const hoje = new Date().toISOString().split('T')[0];
+  document.getElementById('c-data').value = hoje;
+  document.getElementById('c-data').min = hoje;
+
+  if (produto.tipo === 'fisico') {
+    document.getElementById('campo-bairro').style.display = 'block';
+    document.getElementById('campo-agendamento').style.display = 'block';
+  } else {
+    document.getElementById('campo-bairro').style.display = 'none';
+    document.getElementById('campo-agendamento').style.display = 'none';
+  }
+
+  document.getElementById('c-canal').addEventListener('change', function() {
+    document.getElementById('campo-email').style.display = this.value === 'email' ? 'block' : 'none';
+  });
+}
+
+function voltarProduto() {
+  document.getElementById('checkout').style.display = 'none';
+  document.getElementById('pagina-produto').style.display = 'block';
+}
+
+async function confirmarEncomenda() {
+  const nome = document.getElementById('c-nome').value.trim();
+  const tel = normalizarTelefone(document.getElementById('c-tel').value.trim());
+  const canal = document.getElementById('c-canal').value;
+  const email = document.getElementById('c-email').value.trim();
+  const bairro = document.getElementById('c-bairro').value;
+  const data = document.getElementById('c-data').value;
+
+  if (!nome || !tel) { alert('Preenche o nome e o telefone.'); return; }
+  if (canal === 'email' && !email) { alert('Preenche o teu email.'); return; }
+  if (produto.tipo === 'fisico' && !bairro) { alert('Selecciona o teu bairro de entrega.'); return; }
+
+  const btn = document.querySelector('#checkout .btn');
+  btn.disabled = true;
+  btn.textContent = 'A registar...';
+
+  refCodigo = gerarRef();
+  const comissao = afiliadoId ? produto.preco * produto.comissao_percentagem / 100 : 0;
+  const data_entrega = produto.tipo === 'fisico' && data ? new Date(data + 'T09:00:00').toISOString() : null;
+  const observacoes = canal !== 'whatsapp' ? `Enviar por ${canal}${canal === 'email' ? ': ' + email : ''}` : null;
+
+  const insercao = {
+    produto_id: produto.id,
+    afiliado_id: afiliadoId ? parseInt(afiliadoId) : null,
+    comprador_nome: nome,
+    comprador_telefone: tel,
+    comprador_bairro: bairro || 'N/A',
+    valor: produto.preco,
+    comissao,
+    estado: 'pendente',
+    data_entrega,
+    observacoes: observacoes ?? `Ref: ${refCodigo}`
+  };
+
+  const { data: venda, error } = await db.from('vendas').insert(insercao).select().single();
+
+  if (error) {
+    btn.disabled = false;
+    btn.textContent = 'Confirmar encomenda';
+    alert('Erro ao registar. Tenta novamente.');
+    return;
+  }
+
+  vendaId = venda.id;
+
+  if (produto.tipo === 'digital') {
+    mostrarPagamento(nome, tel);
+  } else {
+    mostrarSucessoFisico(nome, bairro, data);
+  }
+}
+
+function mostrarPagamento(nome, tel) {
+  document.getElementById('checkout').style.display = 'none';
+  document.getElementById('pagamento').style.display = 'block';
+  document.getElementById('pag-valor').textContent = Number(produto.preco).toLocaleString() + ' Kzs';
+  document.getElementById('pag-ref').textContent = refCodigo;
+
+  const msg = `Olá Kubanza! 👋\n\nEstou a enviar o comprovativo de pagamento.\n\n📦 Produto: ${produto.nome}\n💰 Valor: ${Number(produto.preco).toLocaleString()} Kzs\n🔑 Referência: ${refCodigo}\n👤 Nome: ${nome}\n📞 Telefone: ${tel}\n\nAguardo o meu produto. Obrigado!`;
+
+  document.getElementById('btn-whatsapp-pag').href = `https://wa.me/${KUBANZA_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+}
+
+function mostrarSucessoFisico(nome, bairro, data) {
+  document.getElementById('checkout').style.display = 'none';
+  document.getElementById('sucesso').style.display = 'block';
+
+  const dataFormatada = data ? new Date(data + 'T09:00:00').toLocaleDateString('pt-AO', {weekday:'long', day:'numeric', month:'long'}) : 'em breve';
+  document.getElementById('sucesso-desc').textContent = `${nome}, a tua encomenda foi registada para entrega no bairro ${bairro} ${dataFormatada}. O motoboy irá contactar-te antes de sair.`;
+
+  const msg = `Olá Kubanza! 👋\n\nFiz uma encomenda de produto físico.\n\n📦 Produto: ${produto.nome}\n👤 Nome: ${nome}\n📍 Bairro: ${bairro}\n📅 Data: ${dataFormatada}`;
+  document.getElementById('btn-whatsapp-suc').href = `https://wa.me/${KUBANZA_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+}
+
+function copiarRef() {
+  navigator.clipboard.writeText(refCodigo).then(() => {
+    alert('Código copiado!');
+  });
+}
+</script>
+</body>
+</html>
